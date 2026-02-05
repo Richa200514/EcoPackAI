@@ -1,0 +1,7 @@
+flask
+pandas
+matplotlib
+joblib
+fpdf
+scikit-learn
+xgboost
