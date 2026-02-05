@@ -1,5 +1,7 @@
 from flask import Flask, request, jsonify, render_template
 import pandas as pd
+import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import joblib
 from flask import send_file  
@@ -195,23 +197,23 @@ def download_report():
     pdf.add_page()
 
     # Title
-    pdf.set_font("Arial", "B", 16)
+    pdf.set_font("Helvetica", "B", 16)
     pdf.cell(0, 10, "EcoPackAI Recommendation Report", ln=True)
     pdf.ln(5)
 
-    pdf.set_font("Arial", size=12)
+    pdf.set_font("Helvetica", size=12)
     pdf.cell(0, 10, "Top 5 Recommended Packaging Materials:", ln=True)
     pdf.ln(3)
 
     # Table Header
-    pdf.set_font("Arial", "B", 11)
+    pdf.set_font("Helvetica", "B", 11)
     pdf.cell(45, 8, "Material", 1)
     pdf.cell(40, 8, "Cost Efficiency", 1)
     pdf.cell(35, 8, "CO2 Impact", 1)
     pdf.cell(35, 8, "Suitability", 1)
     pdf.ln()
 
-    pdf.set_font("Arial", size=11)
+    pdf.set_font("Helvetica", size=11)
 
     for row in latest_results:
         pdf.cell(45, 8, row["Material_Type"], 1)
@@ -223,17 +225,17 @@ def download_report():
     # ===== ADD CHARTS PAGE =====
     pdf.add_page()
 
-    pdf.set_font("Arial", "B", 14)
+    pdf.set_font("Helvetica", "B", 14)
     pdf.cell(0, 10, "Analytics & Visual Insights", ln=True)
     pdf.ln(5)
 
-    pdf.image("cost_chart.png", w=170)
+    pdf.image(os.path.join(base_path, "cost_chart.png"), w=170)
     pdf.ln(5)
 
-    pdf.image("co2_chart.png", w=170)
+    pdf.image(os.path.join(base_path, "co2_chart.png"), w=170)
     pdf.ln(5)
 
-    pdf.image("suitability_chart.png", w=170)
+    pdf.image(os.path.join(base_path, "suitability_chart.png"), w=170)
     pdf.ln(5)
     file_path = os.path.join(os.path.dirname(__file__), "EcoPackAI_Report.pdf")
     pdf.output(file_path)
@@ -242,4 +244,4 @@ def download_report():
 # Run app
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0",port=5000)
