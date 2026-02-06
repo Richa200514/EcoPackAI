@@ -1,3 +1,5 @@
+let lastPredictionResults = null;
+console.log("Script.js loaded successfully.");
 const ecoFacts = [
   "Recycling one ton of cardboard saves over 9 cubic yards of landfill space.",
   "82% of consumers are willing to pay more for products with sustainable packaging.",
@@ -35,6 +37,7 @@ async function getPrediction() {
     });
 
     const data = await response.json();
+    lastPredictionResults = data;  // Store for report download
     const resultsDiv = document.getElementById("results");
     resultsDiv.innerHTML = "";
     // Show server-side messages (e.g., fallback notice when weight exceeds capacity)
@@ -128,4 +131,34 @@ function renderCharts(recommendations) {
     type: "pie",
     marker: {colors: ["green","blue","orange"]}
   }], {title: "Suitability Score Distribution"});
+}
+function downloadReport() {
+  if (!lastPredictionResults || !lastPredictionResults.recommendations) {
+    alert("Please generate recommendations first.");
+    return;
+  }
+
+  fetch("/download", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      recommendations: lastPredictionResults.recommendations
+    })
+  })
+  .then(response => response.blob())
+  .then(blob => {
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "EcoPackAI_Report.pdf";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  })
+  .catch(error => {
+    console.error("Download error:", error);
+    alert("Failed to download report");
+  });
 }
