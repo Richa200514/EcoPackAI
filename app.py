@@ -1,7 +1,9 @@
 from flask import Flask, request, jsonify, render_template
 import pandas as pd
 import matplotlib
+import warnings
 
+warnings.filterwarnings("ignore")
 matplotlib.use("Agg")
 
 import matplotlib.pyplot as plt
