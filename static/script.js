@@ -41,8 +41,8 @@ async function getPrediction() {
     const resultsDiv = document.getElementById("results");
     resultsDiv.innerHTML = "";
     // Show server-side messages (e.g., fallback notice when weight exceeds capacity)
-    if (data.message) {
-      resultsDiv.innerHTML = `<p class="notice" style="color:orange">${data.message}</p>`;
+    if (data.message && !data.message.toLowerCase().includes("feature names")) {
+    resultsDiv.innerHTML = `<p class="notice" style="color:orange">${data.message}</p>`;
     }
 
     if (data.recommendations && data.recommendations.length > 0) {
