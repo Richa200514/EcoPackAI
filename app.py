@@ -165,17 +165,14 @@ def recommend():
 
         # Predictions
 
-        x = pd.DataFrame(
+        # Ensure correct feature order and column names
+        x = feasable_material_df[FEATURES].copy()
 
-    feasable_material_df[FEATURES].values,
-
-    columns=FEATURES
-)
-
+        # Make absolutely sure columns match model training order
+        x = x[FEATURES]
 
         feasable_material_df["Co2_impact_index_pred"] = co2_model.predict(x)
-        jls_extract_var = feasable_material_df
-        jls_extract_var["cost_efficiency_pred"] = cost_model.predict(x)
+        feasable_material_df["cost_efficiency_pred"] = cost_model.predict(x)
 
 
         # Capacity utilization
